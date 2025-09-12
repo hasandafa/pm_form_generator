@@ -292,21 +292,95 @@ git reset --hard origin/main  # Reset to remote version
 
 ---
 
+---
+
+## PM Form Generator Application
+
+This repository also contains a Python application for converting Excel-based maintenance tasklists into structured database forms.
+
+### 🚀 Features
+- **Excel File Processing**: Load and analyze maintenance tasklist sheets
+- **Smart Detection**: Automatically identify procedures and sections
+- **Interactive Configuration**: User-friendly dialog for LOV assignment
+- **Multiple Output Formats**: Generate FORMHEAD, FORMMENU, FORMTEMPLATE, and FORMLOV files
+- **Built-in LOV Database**: Pre-loaded with common maintenance codes
+- **Batch Operations**: Configure similar procedures efficiently
+
+### 📋 Requirements
+- Python 3.8 or higher
+- pandas >= 1.5.0
+- openpyxl >= 3.1.0
+- tkinter (included with Python)
+
+### 🔧 Installation & Usage
+
+#### Method 1: Run from Source
+```bash
+# Install dependencies
+pip install -r requirements.txt
+
+# Run the application
+python formgenerator.py
+```
+
+#### Method 2: Build Executable
+```bash
+# Run the build script
+build.bat
+
+# Run the executable
+dist\PM_Form_Generator.exe
+```
+
+### 📖 How to Use
+1. **Select Excel File**: Choose your maintenance tasklist Excel file
+2. **Pick Sheet**: Select the specific tasklist sheet to process
+3. **Enter Username**: Provide username for form metadata
+4. **Analyze Structure**: Let the app detect procedures and sections
+5. **Configure LOVs**: Assign condition and action codes to each procedure
+6. **Generate Forms**: Create the 4 required Excel output files
+
+### 📁 Input File Format
+- Excel file with tasklist sheets
+- Procedures should be numbered (1., 2., 3., etc.)
+- Sections can be named (ENGINE, GENERATOR, etc.)
+- Standard maintenance form structure expected
+
+### 📊 Output Files
+- **FORMHEAD.xlsx** - Form metadata and configuration
+- **FORMMENU.xlsx** - Menu structure and navigation
+- **FORMTEMPLATE.xlsx** - Form fields and layout definitions
+- **FORMLOV.xlsx** - List of values for dropdowns and checkboxes
+
+---
+
 ## Project Files
 
-- `formgenerator.py` - Main Python application
+- `formgenerator.py` - Main Python application for form generation
+- `requirements.txt` - Python dependencies
+- `build.bat` - Build script for creating executable
 - `ui.html` - Visual workflow canvas (open in browser)
-- `README.md` - This documentation
+- `README.md` - This comprehensive documentation
+
+---
+
+## Git Workflow Integration
+
+This project demonstrates the complete development workflow:
+1. **Repository Setup** - Following the Git workflow guide above
+2. **Development** - Using version control for code and documentation
+3. **Documentation** - Maintaining README and visual guides
+4. **Distribution** - Building executables and managing releases
 
 ---
 
 ## Contributing
 
-This guide is part of my personal development workflow. Feel free to fork and adapt for your own use.
+This project combines Git workflow best practices with practical application development. Feel free to fork and adapt for your own maintenance form generation needs.
 
 ## License
 
-This guide is provided as-is for educational purposes.
+This project is provided as-is for educational and practical purposes.
 
 ---
 
