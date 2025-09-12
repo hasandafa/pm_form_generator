@@ -10,7 +10,7 @@ from pathlib import Path
 class FormGeneratorApp:
     def __init__(self, root):
         self.root = root
-        self.root.title("PM Form Generator v1.2")
+        self.root.title("PM Form Generator v1.3a")
         self.root.geometry("1000x700")
         
         # Initialize variables
@@ -725,8 +725,18 @@ class ProcedureConfigWindow:
         self.window = tk.Toplevel(self.parent)
         self.window.title("Configure Procedures")
         self.window.geometry("1200x600")
+        
+        # Make sure window appears on top and gets focus
         self.window.transient(self.parent)
         self.window.grab_set()
+        self.window.lift()
+        self.window.focus_force()
+        
+        # Center the window
+        self.window.update_idletasks()
+        x = (self.window.winfo_screenwidth() // 2) - (1200 // 2)
+        y = (self.window.winfo_screenheight() // 2) - (600 // 2)
+        self.window.geometry(f"1200x600+{x}+{y}")
         
         # Create main frame
         main_frame = ttk.Frame(self.window, padding="10")
@@ -801,6 +811,12 @@ class ProcedureConfigWindow:
                 'condition_lov': '',
                 'action_lov': ''
             })
+        
+        # Make sure window is visible and focused
+        self.window.deiconify()
+        self.window.lift()
+        self.window.attributes('-topmost', True)
+        self.window.after_idle(lambda: self.window.attributes('-topmost', False))
     
     def on_item_double_click(self, event):
         """Handle double-click on tree item"""
