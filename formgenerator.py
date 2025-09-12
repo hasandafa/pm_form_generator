@@ -10,7 +10,7 @@ from pathlib import Path
 class FormGeneratorApp:
     def __init__(self, root):
         self.root = root
-        self.root.title("PM Form Generator v1.1")
+        self.root.title("PM Form Generator v1.2")
         self.root.geometry("1000x700")
         
         # Initialize variables
@@ -174,33 +174,23 @@ class FormGeneratorApp:
         self.user_name = self.username_entry.get().strip()
         
         try:
-            # Read the sheet
+            # Read the sheet with openpyxl to get merged cell info
+            from openpyxl import load_workbook
+            wb = load_workbook(self.source_file)
+            ws = wb[self.selected_sheet]
+            
+            # Read with pandas for data processing
             df = pd.read_excel(self.source_file, sheet_name=self.selected_sheet, header=None)
             
             # Find procedures and sections
             self.procedures = []
             self.sections = []
             current_section = ""
+            last_proc_num = 0
             
             for idx, row in df.iterrows():
                 # Convert row to list and handle NaN values
                 row_values = [str(cell).strip() if not pd.isna(cell) else '' for cell in row]
-                
-                # Check each cell for section headers first
-                for col_idx, cell_str in enumerate(row_values):
-                    if not cell_str:
-                        continue
-                    
-                    # Check if it's a section header
-                    if any(keyword in cell_str.upper() for keyword in ['TASK', 'ENGINE', 'GENERATOR', 'MECHANICAL', 'ELECTRICAL', 'SYSTEM', 'COMPRESSOR']):
-                        if len(cell_str) > 10:  # Avoid short mentions
-                            current_section = cell_str
-                            if current_section not in [s['name'] for s in self.sections]:
-                                self.sections.append({
-                                    'name': current_section,
-                                    'row': idx,
-                                    'col': col_idx
-                                })
                 
                 # Check for procedures in table format (number in col A, description in col B)
                 if len(row_values) > 1:
@@ -211,6 +201,58 @@ class FormGeneratorApp:
                     if col_a.isdigit() and len(col_b) > 5:  # Reasonable procedure length
                         proc_num = int(col_a)
                         proc_desc = col_b
+                        
+                        # Detect section change when numbering resets to 1
+                        if proc_num == 1 and last_proc_num > 1:
+                            # Look for section header above this procedure
+                            section_found = False
+                            # Check a few rows above for section header
+                            for check_idx in range(max(0, idx - 5), idx):
+                                if check_idx < len(df):
+                                    check_row = df.iloc[check_idx]
+                                    for cell_val in check_row:
+                                        if not pd.isna(cell_val):
+                                            cell_str = str(cell_val).strip()
+                                            # Potential section header criteria:
+                                            # - Not empty, not too long, not a procedure description
+                                            if (len(cell_str) > 3 and len(cell_str) < 50 and 
+                                                not cell_str.isdigit() and
+                                                not any(word in cell_str.lower() for word in ['inspect', 'replace', 'check', 'test', 'measure', 'clean'])):
+                                                current_section = cell_str
+                                                if current_section not in [s['name'] for s in self.sections]:
+                                                    self.sections.append({
+                                                        'name': current_section,
+                                                        'row': check_idx,
+                                                        'col': 0
+                                                    })
+                                                section_found = True
+                                                break
+                                    if section_found:
+                                        break
+                        
+                        # If this is the very first procedure and no section set yet
+                        if proc_num == 1 and not current_section:
+                            # Look for section header above first procedure
+                            for check_idx in range(max(0, idx - 5), idx):
+                                if check_idx < len(df):
+                                    check_row = df.iloc[check_idx]
+                                    for cell_val in check_row:
+                                        if not pd.isna(cell_val):
+                                            cell_str = str(cell_val).strip()
+                                            if (len(cell_str) > 3 and len(cell_str) < 50 and 
+                                                not cell_str.isdigit() and
+                                                not any(word in cell_str.lower() for word in ['inspect', 'replace', 'check', 'test', 'measure', 'clean'])):
+                                                current_section = cell_str
+                                                if current_section not in [s['name'] for s in self.sections]:
+                                                    self.sections.append({
+                                                        'name': current_section,
+                                                        'row': check_idx,
+                                                        'col': 0
+                                                    })
+                                                break
+                                    if current_section:
+                                        break
+                        
                         self.procedures.append({
                             'section': current_section,
                             'number': proc_num,
@@ -219,6 +261,7 @@ class FormGeneratorApp:
                             'row': idx,
                             'col': 1  # Procedure is in column B
                         })
+                        last_proc_num = proc_num
                 
                 # Also check for procedures in single-cell format (fallback)
                 for col_idx, cell_str in enumerate(row_values):
@@ -229,8 +272,31 @@ class FormGeneratorApp:
                     if procedure_match:
                         proc_num = int(procedure_match.group(1))
                         proc_desc = procedure_match.group(2)
-                        # Avoid duplicates
+                        
+                        # Avoid duplicates from table format detection
                         if not any(p['number'] == proc_num and p['description'] == proc_desc for p in self.procedures):
+                            # Detect section change for single-cell format too
+                            if proc_num == 1 and last_proc_num > 1:
+                                for check_idx in range(max(0, idx - 3), idx):
+                                    if check_idx < len(df):
+                                        check_row = df.iloc[check_idx]
+                                        for cell_val in check_row:
+                                            if not pd.isna(cell_val):
+                                                cell_str_check = str(cell_val).strip()
+                                                if (len(cell_str_check) > 3 and len(cell_str_check) < 50 and 
+                                                    not cell_str_check.isdigit() and
+                                                    not re.match(r'^\d+\.', cell_str_check)):
+                                                    current_section = cell_str_check
+                                                    if current_section not in [s['name'] for s in self.sections]:
+                                                        self.sections.append({
+                                                            'name': current_section,
+                                                            'row': check_idx,
+                                                            'col': col_idx
+                                                        })
+                                                    break
+                                        if current_section:
+                                            break
+                            
                             self.procedures.append({
                                 'section': current_section,
                                 'number': proc_num,
@@ -239,6 +305,7 @@ class FormGeneratorApp:
                                 'row': idx,
                                 'col': col_idx
                             })
+                            last_proc_num = proc_num
             
             # Display analysis results
             self.analysis_text.delete(1.0, tk.END)
