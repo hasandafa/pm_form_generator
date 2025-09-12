@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Git Workflow Canvas - hasandafa</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .canvas {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #7f8c8d;
+            font-size: 1.1em;
+        }
+        
+        .workflow-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .step-card {
+            background: linear-gradient(145deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            padding: 25px;
+            border-left: 5px solid;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .step-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        
+        .step1 { border-left-color: #e74c3c; }
+        .step2 { border-left-color: #f39c12; }
+        .step3 { border-left-color: #2ecc71; }
+        .step4 { border-left-color: #3498db; }
+        .step5 { border-left-color: #9b59b6; }
+        .step6 { border-left-color: #1abc9c; }
+        
+        .step-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .step-number {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .code-box {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+        
+        .command {
+            color: #f39c12;
+        }
+        
+        .comment {
+            color: #95a5a6;
+        }
+        
+        .quick-ref {
+            background: linear-gradient(145deg, #2c3e50, #34495e);
+            color: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+        }
+        
+        .quick-ref h2 {
+            color: #ecf0f1;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .ref-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .ref-section {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+        }
+        
+        .ref-section h3 {
+            color: #f39c12;
+            margin-bottom: 10px;
+        }
+        
+        .ref-section code {
+            background: rgba(0,0,0,0.3);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+        
+        .workflow-arrow {
+            text-align: center;
+            font-size: 2em;
+            color: #667eea;
+            margin: 20px 0;
+        }
+        
+        .device-flow {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: 30px 0;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .device {
+            background: linear-gradient(145deg, #3498db, #2980b9);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            min-width: 150px;
+        }
+        
+        .device h3 {
+            margin-bottom: 10px;
+        }
+        
+        .arrow {
+            font-size: 2em;
+            color: #f39c12;
+        }
+        
+        .daily-workflow {
+            background: linear-gradient(145deg, #e8f5e8, #c8e6c9);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+        
+        .daily-workflow h3 {
+            color: #2e7d32;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .workflow-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .workflow-step {
+            background: #4caf50;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 25px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 768px) {
+            .canvas {
+                padding: 20px;
+            }
+            
+            .workflow-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .device-flow {
+                flex-direction: column;
+            }
+            
+            .workflow-steps {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .workflow-step {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="canvas">
+        <div class="header">
+            <h1>🚀 Git Workflow Canvas</h1>
+            <p><strong>Author:</strong> hasandafa | <strong>For:</strong> Personal Laptop ↔ Office PC Development</p>
+        </div>
+        
+        <div class="device-flow">
+            <div class="device">
+                <h3>💻 Personal Laptop</h3>
+                <p>C:\Users\user\pm_form_generator</p>
+            </div>
+            <div class="arrow">⟷</div>
+            <div class="device">
+                <h3>🐱 GitHub</h3>
+                <p>hasandafa/pm_form_generator</p>
+            </div>
+            <div class="arrow">⟷</div>
+            <div class="device">
+                <h3>🏢 Office PC</h3>
+                <p>Enterprise Environment</p>
+            </div>
+        </div>
+        
+        <div class="daily-workflow">
+            <h3>📅 Daily Workflow Checklist</h3>
+            <div class="workflow-steps">
+                <div class="workflow-step">1. git pull origin main</div>
+                <div class="workflow-step">2. Make changes</div>
+                <div class="workflow-step">3. git add .</div>
+                <div class="workflow-step">4. git commit -m "message"</div>
+                <div class="workflow-step">5. git push origin main</div>
+            </div>
+        </div>
+        
+        <div class="workflow-grid">
+            <div class="step-card step1">
+                <div class="step-title">
+                    <div class="step-number">1</div>
+                    Create New Repository
+                </div>
+                <p><strong>🌐 On GitHub:</strong></p>
+                <ul>
+                    <li>Go to GitHub.com</li>
+                    <li>Click "+" → "New repository"</li>
+                    <li>Name: <code>pm_form_generator</code></li>
+                    <li>Don't initialize with README</li>
+                </ul>
+                <div class="code-box">
+<span class="comment"># Local setup</span>
+<span class="command">git init</span>
+<span class="command">git add .</span>
+<span class="command">git commit -m "Initial commit"</span>
+<span class="command">git branch -m master main</span>
+<span class="command">git remote add origin https://github.com/hasandafa/pm_form_generator.git</span>
+<span class="command">git push -u origin main</span>
+                </div>
+            </div>
+            
+            <div class="step-card step2">
+                <div class="step-title">
+                    <div class="step-number">2</div>
+                    Clone to Another Device
+                </div>
+                <p><strong>🏢 On Office PC:</strong></p>
+                <div class="code-box">
+<span class="command">cd /c/path/to/workspace</span>
+<span class="command">git clone https://github.com/hasandafa/pm_form_generator.git</span>
+<span class="command">cd pm_form_generator</span>
+<span class="command">git branch</span> <span class="comment"># Verify main branch</span>
+                </div>
+                <p><strong>✅ Verification:</strong></p>
+                <ul>
+                    <li><code>git remote -v</code></li>
+                    <li><code>git branch -vv</code></li>
+                </ul>
+            </div>
+            
+            <div class="step-card step3">
+                <div class="step-title">
+                    <div class="step-number">3</div>
+                    Daily File Management
+                </div>
+                <p><strong>📝 Before Work:</strong></p>
+                <div class="code-box">
+<span class="command">git pull origin main</span> <span class="comment"># Always first!</span>
+                </div>
+                <p><strong>📤 After Work:</strong></p>
+                <div class="code-box">
+<span class="command">git status</span>
+<span class="command">git add .</span>
+<span class="command">git commit -m "Add feature: description"</span>
+<span class="command">git push origin main</span>
+                </div>
+            </div>
+            
+            <div class="step-card step4">
+                <div class="step-title">
+                    <div class="step-number">4</div>
+                    Advanced Operations
+                </div>
+                <p><strong>📊 Check History:</strong></p>
+                <div class="code-box">
+<span class="command">git log --oneline</span>
+<span class="command">git status -v</span>
+<span class="command">git diff</span>
+                </div>
+                <p><strong>↩️ Undo Changes:</strong></p>
+                <div class="code-box">
+<span class="command">git checkout -- filename.py</span>
+<span class="command">git reset HEAD filename.py</span>
+<span class="command">git reset HEAD~1</span>
+                </div>
+            </div>
+            
+            <div class="step-card step5">
+                <div class="step-title">
+                    <div class="step-number">5</div>
+                    Troubleshooting
+                </div>
+                <p><strong>🔧 Sync Issues:</strong></p>
+                <div class="code-box">
+<span class="command">git stash</span> <span class="comment"># Save work temporarily</span>
+<span class="command">git pull origin main</span>
+<span class="command">git stash pop</span> <span class="comment"># Restore work</span>
+                </div>
+                <p><strong>🚨 Force Reset:</strong></p>
+                <div class="code-box">
+<span class="command">git fetch origin</span>
+<span class="command">git reset --hard origin/main</span>
+                </div>
+            </div>
+            
+            <div class="step-card step6">
+                <div class="step-title">
+                    <div class="step-number">6</div>
+                    Best Practices
+                </div>
+                <p><strong>📝 Commit Messages:</strong></p>
+                <ul>
+                    <li>"Add feature: user authentication"</li>
+                    <li>"Fix bug: form validation error"</li>
+                    <li>"Update: improve database connection"</li>
+                </ul>
+                <p><strong>📁 .gitignore for Python:</strong></p>
+                <div class="code-box">
+__pycache__/
+*.pyc
+.env
+*.log
+                </div>
+            </div>
+        </div>
+        
+        <div class="quick-ref">
+            <h2>⚡ Quick Reference Commands</h2>
+            <div class="ref-grid">
+                <div class="ref-section">
+                    <h3>Essential Daily</h3>
+                    <p><code>git pull origin main</code> - Get latest</p>
+                    <p><code>git add .</code> - Stage all</p>
+                    <p><code>git commit -m "msg"</code> - Commit</p>
+                    <p><code>git push origin main</code> - Push</p>
+                    <p><code>git status</code> - Check status</p>
+                </div>
+                <div class="ref-section">
+                    <h3>Setup (One-time)</h3>
+                    <p><code>git init</code> - Initialize</p>
+                    <p><code>git remote add origin URL</code> - Add remote</p>
+                    <p><code>git branch -m master main</code> - Rename branch</p>
+                    <p><code>git push -u origin main</code> - First push</p>
+                </div>
+                <div class="ref-section">
+                    <h3>Troubleshooting</h3>
+                    <p><code>git stash</code> - Save temporarily</p>
+                    <p><code>git stash pop</code> - Restore saved</p>
+                    <p><code>git reset --hard origin/main</code> - Force reset</p>
+                    <p><code>git log --oneline</code> - View history</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="quick-ref" style="background: linear-gradient(145deg, #2c3e50, #34495e); margin-top: 30px;">
+            <h2>📋 PM Form Generator Application</h2>
+            <div style="margin-bottom: 20px; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 10px;">
+                <p style="color: #ecf0f1; font-size: 1.1em;">This repository includes <strong>formgenerator.py</strong> - a Python application for converting Excel maintenance tasklists into structured database forms.</p>
+            </div>
+            <div class="ref-grid">
+                <div class="ref-section">
+                    <h3>🚀 Key Features</h3>
+                    <p>• Excel file processing & analysis</p>
+                    <p>• Smart procedure detection</p>
+                    <p>• Interactive LOV configuration</p>
+                    <p>• Batch operations for efficiency</p>
+                    <p>• Built-in LOV database</p>
+                    <p>• Multiple output formats</p>
+                </div>
+                <div class="ref-section">
+                    <h3>📋 Requirements</h3>
+                    <p><code>Python 3.8+</code></p>
+                    <p><code>pandas >= 1.5.0</code></p>
+                    <p><code>openpyxl >= 3.1.0</code></p>
+                    <p><code>tkinter (included)</code></p>
+                    <p><strong>Install:</strong> <code>pip install -r requirements.txt</code></p>
+                    <p><strong>Run:</strong> <code>python formgenerator.py</code></p>
+                </div>
+                <div class="ref-section">
+                    <h3>📁 Input Format</h3>
+                    <p>• Excel maintenance tasklists</p>
+                    <p>• Numbered procedures (1., 2., 3.)</p>
+                    <p>• Section headers (ENGINE, GENERATOR)</p>
+                    <p>• Standard maintenance form structure</p>
+                    <p><strong>Example:</strong> YKN-CPP2-G-603_PM1.xlsx</p>
+                </div>
+                <div class="ref-section">
+                    <h3>📊 Output Files</h3>
+                    <p><code>FORMHEAD.xlsx</code> - Form metadata</p>
+                    <p><code>FORMMENU.xlsx</code> - Menu structure</p>
+                    <p><code>FORMTEMPLATE.xlsx</code> - Field layout</p>
+                    <p><code>FORMLOV.xlsx</code> - Dropdown values</p>
+                    <p><strong>Generated automatically per tasklist</strong></p>
+                </div>
+                <div class="ref-section">
+                    <h3>🔧 Usage Workflow</h3>
+                    <p>1. Select Excel tasklist file</p>
+                    <p>2. Choose specific sheet to process</p>
+                    <p>3. Enter username for metadata</p>
+                    <p>4. Analyze detected procedures</p>
+                    <p>5. Configure LOV codes</p>
+                    <p>6. Generate 4 output files</p>
+                </div>
+                <div class="ref-section">
+                    <h3>🎯 Build & Deploy</h3>
+                    <p><strong>Build EXE:</strong> <code>build.bat</code></p>
+                    <p><strong>Output:</strong> <code>dist\PM_Form_Generator.exe</code></p>
+                    <p>• Self-contained executable</p>
+                    <p>• No Python installation required</p>
+                    <p>• Includes all dependencies</p>
+                    <p>• Ready for distribution</p>
+                </div>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 2px solid #ecf0f1;">
+            <h2 style="color: #667eea; margin-bottom: 20px;">📋 PM Form Generator Application</h2>
+            <div class="ref-grid" style="margin-top: 20px;">
+                <div class="ref-section">
+                    <h3>🚀 Application Features</h3>
+                    <p>• Excel tasklist processing</p>
+                    <p>• Smart procedure detection</p>
+                    <p>• Interactive LOV configuration</p>
+                    <p>• Batch form generation</p>
+                    <p>• Built-in LOV database</p>
+                </div>
+                <div class="ref-section">
+                    <h3>📁 Input Requirements</h3>
+                    <p>• Excel maintenance tasklists</p>
+                    <p>• Numbered procedures (1., 2., 3.)</p>
+                    <p>• Section headers (ENGINE, GENERATOR)</p>
+                    <p>• Standard maintenance format</p>
+                </div>
+                <div class="ref-section">
+                    <h3>📊 Output Files</h3>
+                    <p>• FORMHEAD.xlsx (metadata)</p>
+                    <p>• FORMMENU.xlsx (navigation)</p>
+                    <p>• FORMTEMPLATE.xlsx (layout)</p>
+                    <p>• FORMLOV.xlsx (dropdowns)</p>
+                </div>
+            </div>
+            <div style="margin-top: 20px; padding: 15px; background: rgba(102, 126, 234, 0.1); border-radius: 10px;">
+                <p style="color: #667eea; font-weight: bold;">🔧 Usage: Run formgenerator.py or build with build.bat</p>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 2px solid #ecf0f1;">
+            <h3 style="color: #667eea;">Happy Coding! 🚀</h3>
+            <p style="color: #7f8c8d; margin-top: 10px;">Complete workflow solution for development and form generation</p>
+        </div>
+    </div>
+</body>
+</html>

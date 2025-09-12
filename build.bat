@@ -20,7 +20,7 @@ if exist "*.spec" del "*.spec"
 
 echo.
 echo [3/4] Building executable...
-pyinstaller --onefile --windowed --icon=formgenerator.ico --name="PM_Form_Generator" formgenerator.py
+pyinstaller --onefile --windowed --name="PM_Form_Generator" formgenerator.py
 if %errorlevel% neq 0 (
     echo ERROR: Failed to build executable
     pause
