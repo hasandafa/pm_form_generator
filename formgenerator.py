@@ -10,7 +10,7 @@ from pathlib import Path
 class FormGeneratorApp:
     def __init__(self, root):
         self.root = root
-        self.root.title("PM Form Generator v1.0")
+        self.root.title("PM Form Generator v1.1")
         self.root.geometry("1000x700")
         
         # Initialize variables
@@ -183,29 +183,17 @@ class FormGeneratorApp:
             current_section = ""
             
             for idx, row in df.iterrows():
-                for col_idx, cell in enumerate(row):
-                    if pd.isna(cell):
+                # Convert row to list and handle NaN values
+                row_values = [str(cell).strip() if not pd.isna(cell) else '' for cell in row]
+                
+                # Check each cell for section headers first
+                for col_idx, cell_str in enumerate(row_values):
+                    if not cell_str:
                         continue
                     
-                    cell_str = str(cell).strip()
-                    
-                    # Check if it's a procedure (starts with number)
-                    procedure_match = re.match(r'^(\d+)\.\s*(.+)', cell_str)
-                    if procedure_match:
-                        proc_num = int(procedure_match.group(1))
-                        proc_desc = procedure_match.group(2)
-                        self.procedures.append({
-                            'section': current_section,
-                            'number': proc_num,
-                            'description': proc_desc,
-                            'full_text': cell_str,
-                            'row': idx,
-                            'col': col_idx
-                        })
-                    
-                    # Check if it's a section header (contains TASK)
-                    elif any(keyword in cell_str.upper() for keyword in ['TASK', 'ENGINE', 'GENERATOR', 'MECHANICAL', 'ELECTRICAL']):
-                        if len(cell_str) > 10 and not procedure_match:  # Avoid short task mentions
+                    # Check if it's a section header
+                    if any(keyword in cell_str.upper() for keyword in ['TASK', 'ENGINE', 'GENERATOR', 'MECHANICAL', 'ELECTRICAL', 'SYSTEM', 'COMPRESSOR']):
+                        if len(cell_str) > 10:  # Avoid short mentions
                             current_section = cell_str
                             if current_section not in [s['name'] for s in self.sections]:
                                 self.sections.append({
@@ -213,6 +201,44 @@ class FormGeneratorApp:
                                     'row': idx,
                                     'col': col_idx
                                 })
+                
+                # Check for procedures in table format (number in col A, description in col B)
+                if len(row_values) > 1:
+                    col_a = row_values[0]  # First column (usually number)
+                    col_b = row_values[1]  # Second column (usually procedure)
+                    
+                    # Check if col A contains a number and col B has procedure text
+                    if col_a.isdigit() and len(col_b) > 5:  # Reasonable procedure length
+                        proc_num = int(col_a)
+                        proc_desc = col_b
+                        self.procedures.append({
+                            'section': current_section,
+                            'number': proc_num,
+                            'description': proc_desc,
+                            'full_text': f"{proc_num}. {proc_desc}",
+                            'row': idx,
+                            'col': 1  # Procedure is in column B
+                        })
+                
+                # Also check for procedures in single-cell format (fallback)
+                for col_idx, cell_str in enumerate(row_values):
+                    if not cell_str:
+                        continue
+                    
+                    procedure_match = re.match(r'^(\d+)\.\s*(.+)', cell_str)
+                    if procedure_match:
+                        proc_num = int(procedure_match.group(1))
+                        proc_desc = procedure_match.group(2)
+                        # Avoid duplicates
+                        if not any(p['number'] == proc_num and p['description'] == proc_desc for p in self.procedures):
+                            self.procedures.append({
+                                'section': current_section,
+                                'number': proc_num,
+                                'description': proc_desc,
+                                'full_text': cell_str,
+                                'row': idx,
+                                'col': col_idx
+                            })
             
             # Display analysis results
             self.analysis_text.delete(1.0, tk.END)
@@ -244,7 +270,7 @@ class FormGeneratorApp:
         if not self.procedures:
             return
         
-        config_window = ProcedureConfigWindow(self.root, self.procedures, self.lov_database, self.generate_forms)
+        config_window = ProcedureConfigWindow(self.root, self.procedures, self.lov_database, self.generate_forms, self.base_lov_code)
         config_window.show()
     
     def generate_forms(self, configured_procedures):
