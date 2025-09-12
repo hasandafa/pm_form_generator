@@ -1,386 +1,512 @@
-# Git Workflow Guide - Personal & Office Development
+# Excel Format Handler v3.0 - Maintenance Form Generator
 
-> A comprehensive guide for managing Git repositories across personal laptop and office PC using Git Bash
+> Advanced Excel maintenance tasklist processor with intelligent format detection and automated form generation
 > 
-> **Author:** hasandafa  
+> **Author:** MK.ABDULLAH.DAFA (hasandafa)  
+> **Version:** 3.0 - Focused Solution  
 > **Last Updated:** September 2025
 
-## Step 1: Create New Repository on GitHub
+## 🚀 Overview
 
-### 1.1 Create Repository
-1. Go to [GitHub.com](https://github.com) and sign in with your account (hasandafa)
-2. Click the "+" icon in the top right corner and select "New repository"
-3. Set repository name: `your_project_name`
-4. Choose visibility (Public or Private)
-5. **Do NOT** initialize with README, .gitignore, or license (if you have existing local files)
-6. Click "Create repository"
+Excel Format Handler v3.0 is a comprehensive Python application designed to process Excel-based maintenance tasklists and convert them into structured database forms. The application features intelligent format detection, automated procedure extraction, and streamlined LOV (List of Values) configuration for efficient maintenance form generation.
 
-### 1.2 Initialize Local Repository (First Time Setup)
-Open Git Bash in your project directory and run:
+### Key Improvements in v3.0
+- **Simplified Interface**: Clean 4-step workflow instead of complex multiple tabs
+- **Smart Detection**: Advanced pattern recognition for various Excel formats
+- **Real-time LOV Generation**: Automatic unique code generation as you type
+- **Conflict Resolution**: Built-in unique identifier system to prevent duplicates
+- **Enhanced User Experience**: Default user settings with custom override options
 
-```bash
-# Initialize git repository
-git init
+---
 
-# Add all files
-git add .
+## 📋 Requirements
 
-# Create initial commit
-git commit -m "Initial commit: Project setup"
+### System Requirements
+- **Operating System**: Windows 7/8/10/11, macOS 10.14+, or Linux Ubuntu 18.04+
+- **Python**: Version 3.8 or higher
+- **Memory**: Minimum 4GB RAM (8GB recommended for large Excel files)
+- **Storage**: 500MB free space for installation and temporary files
 
-# Rename default branch from master to main
-git branch -m master main
-
-# Add GitHub repository as remote origin
-git remote add origin https://github.com/hasandafa/your_project_name.git
-
-# Push to GitHub and set main as upstream branch
-git push -u origin main
+### Python Dependencies
 ```
-
-### 1.3 Configure Git Default Branch (One-time setup)
-```bash
-# Set main as default branch for all future repositories
-git config --global init.defaultBranch main
-
-# Set your Git credentials (if not done before)
-git config --global user.name "hasandafa"
-git config --global user.email "your-email@domain.com"
+pandas >= 1.5.0          # Excel file processing and data manipulation
+openpyxl >= 3.1.0        # Excel file reading/writing support
+tkinter                  # GUI framework (included with Python)
+pathlib                 # File path operations (included with Python 3.4+)
+hashlib                 # Unique identifier generation (standard library)
 ```
 
 ---
 
-## Step 2: Access Repository from Another Device
+## 🔧 Installation Guide
 
-### 2.1 Clone Repository (Office PC or New Device)
-```bash
-# Navigate to your workspace directory
-cd /c/path/to/your/workspace
+### Method 1: Run from Source (Recommended for Developers)
 
-# Clone the repository
-git clone https://github.com/hasandafa/your_project_name.git
+1. **Install Python Dependencies**
+   ```bash
+   # Create virtual environment (recommended)
+   python -m venv excel_handler_env
+   
+   # Activate virtual environment
+   # Windows:
+   excel_handler_env\Scripts\activate
+   # macOS/Linux:
+   source excel_handler_env/bin/activate
+   
+   # Install required packages
+   pip install pandas>=1.5.0 openpyxl>=3.1.0
+   ```
 
-# Navigate into the cloned directory
-cd your_project_name
+2. **Download and Run Application**
+   ```bash
+   # Clone or download the project
+   git clone https://github.com/hasandafa/pm_form_generator.git
+   cd pm_form_generator
+   
+   # Run the application
+   python formgenerator.py
+   ```
 
-# Verify you're on main branch
-git branch
-```
+### Method 2: Build Standalone Executable
 
-### 2.2 Verify Setup
-```bash
-# Check current branch
-git branch
+1. **Install PyInstaller**
+   ```bash
+   pip install pyinstaller
+   ```
 
-# Check remote configuration
-git remote -v
+2. **Build Executable**
+   ```bash
+   # Create standalone executable
+   pyinstaller --onefile --windowed formgenerator.py
+   
+   # Run the executable
+   dist/formgenerator.exe
+   ```
 
-# Check branch tracking
-git branch -vv
-```
+### Method 3: Quick Setup Script
 
----
-
-## Step 3: Daily Workflow - Add/Update Programs or Files
-
-### 3.1 Before Starting Work (Always Do This First)
-```bash
-# Pull latest changes from GitHub
-git pull origin main
-```
-
-### 3.2 Working with Files
-```bash
-# Check current status
-git status
-
-# Add specific file(s)
-git add filename.py
-git add folder/
-
-# Add all changed files
-git add .
-
-# Check what will be committed
-git status
-```
-
-### 3.3 Commit Changes
-```bash
-# Commit with descriptive message
-git commit -m "Add feature: user authentication"
-git commit -m "Fix bug: form validation error"
-git commit -m "Update: improve database connection"
-
-# Or commit with detailed description
-git commit -m "Add user registration form
-
-- Create registration form with validation
-- Add password confirmation field
-- Implement email verification"
-```
-
-### 3.4 Push Changes to GitHub
-```bash
-# Push to main branch
-git push origin main
-
-# Or simply (after first push with -u)
-git push
+Create a `setup.bat` file:
+```batch
+@echo off
+echo Installing Excel Format Handler v3.0...
+python -m pip install --upgrade pip
+pip install pandas>=1.5.0 openpyxl>=3.1.0
+echo Installation complete!
+echo Run: python formgenerator.py
+pause
 ```
 
 ---
 
-## Step 4: Advanced Git Operations
+## 📖 How to Use - Step by Step Guide
 
-### 4.1 Check Project History
-```bash
-# View commit history
-git log
+### Step 1: File Selection
 
-# View compact history
-git log --oneline
+1. **Launch Application**
+   ```bash
+   python formgenerator.py
+   ```
 
-# View specific file history
-git log filename.py
+2. **Select Excel File**
+   - Click **"Select Excel File"** button
+   - Browse to your maintenance tasklist Excel file
+   - Supported formats: `.xlsx`, `.xls`
+   - File automatically loads and displays available sheets
+
+3. **Configure User Settings**
+   - **Default User**: "MK.ABDULLAH.DAFA" (recommended)
+   - **Custom User**: Select "Custom" radio button and enter your name
+   - This will appear in all generated form metadata
+
+4. **Choose Sheet**
+   - Select the specific worksheet containing your maintenance procedures
+   - Sheet names appear in the dropdown menu
+   - Click **"Analyze Format"** to proceed
+
+**Expected Result**: File loads successfully, unique prefixes generated automatically
+```
+Generated Prefixes: File: MAI-A3F | Sheet: ENG-B2C
 ```
 
-### 4.2 Undo Changes
-```bash
-# Undo changes in working directory (before add)
-git checkout -- filename.py
+### Step 2: Format Analysis
 
-# Unstage file (after add, before commit)
-git reset HEAD filename.py
+1. **Automatic Format Detection**
+   - Application analyzes the selected sheet content
+   - Detects format type (Maintenance, Checklist, Calibration, etc.)
+   - Calculates confidence score for detection accuracy
+   - Displays detected procedures with row/column information
 
-# Undo last commit (keep changes in working directory)
-git reset HEAD~1
+2. **Review Analysis Results**
+   ```
+   📋 FORMAT ANALYSIS RESULTS
+   ==================================================
+   📁 File: YKN-CPP2-G-603_PM1.xlsx
+   📄 Sheet: ENGINE MAINTENANCE
+   🔍 Detected Format: MAINTENANCE
+   🎯 Confidence: 75.0%
+   
+   ✅ Found 15 procedures:
+   ----------------------------------------
+    1. 1. Inspect engine oil level and condition...
+    2. 2. Check cooling system for leaks...
+    3. 3. Test engine temperature sensors...
+   ```
 
-# Undo last commit (discard all changes)
-git reset --hard HEAD~1
+3. **Action Options**
+   - **Accept & Configure LOVs**: Proceed with detected procedures (recommended)
+   - **Re-analyze**: Run detection again if results seem incorrect
+   - **View Raw Data**: Examine raw Excel structure for manual verification
+
+**Expected Result**: Clear analysis showing detected procedures and confidence level
+
+### Step 3: LOV Configuration
+
+1. **Automatic LOV Setup**
+   - Click **"Accept & Configure LOVs"**
+   - Application creates input fields for each detected procedure
+   - Scrollable interface accommodates large numbers of procedures
+
+2. **Configure Individual Procedures**
+   
+   For each procedure row:
+   - **Procedure**: Displays the detected maintenance procedure text
+   - **Condition Values**: Enter possible condition states (comma-separated)
+   - **Action Values**: Enter possible corrective actions (comma-separated)
+   - **Generated LOV Code**: Automatically updates as you type values
+
+   **Example Configuration:**
+   ```
+   Procedure: Inspect engine oil level and condition
+   Condition Values: Good,Dirty,Low,Contaminated
+   Action Values: No Action,Top Up,Change Oil,Clean System
+   Generated LOV Code: C:ENG-B2C-GDLC | A:ENG-B2C-NTCC
+   ```
+
+3. **Bulk Configuration Options**
+   - **Auto-Configure Common LOVs**: Automatically assigns standard values based on procedure keywords
+     - "inspect" → Good,Dirty,Damaged,Missing / No Action,Clean,Repair,Replace
+     - "check" → OK,Not OK,Needs Attention / No Action,Adjust,Repair
+     - "clean" → Clean,Dirty,Blocked / Cleaned,Replaced
+     - "calibrate" → In Tolerance,Out of Tolerance / Calibrated,Adjusted
+
+   - **Clear All LOVs**: Removes all configured values to start fresh
+
+**Expected Result**: Each procedure has configured condition/action values with unique LOV codes
+
+### Step 4: Generate Forms
+
+1. **Set Output Directory**
+   - Specify where generated files will be saved
+   - Default: Current working directory
+   - Click **"Browse"** to select different location
+
+2. **Preview Generation** (Optional but Recommended)
+   - Click **"Preview Generation"** to review what will be created
+   - Shows file information, user settings, and configuration status
+   ```
+   FORM GENERATION PREVIEW
+   ==================================================
+   Source File: YKN-CPP2-G-603_PM1.xlsx
+   Sheet: ENGINE MAINTENANCE
+   User: MK.ABDULLAH.DAFA
+   File Prefix: YKN-A3F
+   Sheet Prefix: ENG-B2C
+   
+   FILES TO BE GENERATED:
+   ✓ FORMHEAD.xlsx - Form metadata and configuration
+   ✓ FORMTEMPLATE.xlsx - 135 template entries
+   ✓ FORMLOV.xlsx - LOV definitions
+   ✓ FORMMENU.xlsx - Menu structure
+   
+   CONFIGURATION STATUS:
+   ✓ Configured: 15/15
+   ```
+
+3. **Generate Excel Forms**
+   - Click **"Generate Excel Forms"** to create output files
+   - Progress indication during generation process
+   - Success dialog shows created files and output directory
+
+4. **Generated Files Structure**
+   ```
+   Output Directory/
+   ├── FORMHEAD_ENG-B2C_20250913_143022.xlsx     # Form metadata
+   ├── FORMTEMPLATE_ENG-B2C_20250913_143022.xlsx # 9 entries per procedure
+   ├── FORMLOV_ENG-B2C_20250913_143022.xlsx      # Condition/Action values
+   └── FORMMENU_ENG-B2C_20250913_143022.xlsx     # Menu structure
+   ```
+
+**Expected Result**: 4 Excel files generated with unique timestamps and prefixes
+
+---
+
+## 📁 Input File Format Requirements
+
+### Excel File Structure
+```
+Required Elements:
+✓ Excel file (.xlsx or .xls format)
+✓ At least one worksheet with maintenance procedures
+✓ Procedures should be numbered (1., 2., 3., etc.) or contain action keywords
+✓ Text length minimum 10 characters per procedure
+
+Optional Elements:
+• Section headers (ENGINE, GENERATOR, ELECTRICAL, etc.)
+• Additional columns with condition/action data
+• Comments or remarks columns
 ```
 
-### 4.3 Branch Management
-```bash
-# Create and switch to new branch
-git checkout -b feature-branch
+### Supported Format Patterns
 
-# Switch between branches
-git checkout main
-git checkout feature-branch
+1. **Standard Maintenance Format**
+   ```
+   1. Inspect engine oil level and condition
+   2. Check cooling system for leaks and damage
+   3. Test all engine sensors and connections
+   ```
 
-# List all branches
-git branch
+2. **Checklist Format**
+   ```
+   Check startup parameters    OK / Not OK
+   Verify system pressure     Normal / High / Low
+   Monitor temperature        Within Range / Alert
+   ```
 
-# Merge feature branch to main
-git checkout main
-git merge feature-branch
+3. **Calibration Format**
+   ```
+   Transmitter TT-001    As Found: 95.2°C    As Left: 95.5°C
+   Pressure PT-002       As Found: 1.85 bar  As Left: 1.87 bar
+   ```
 
-# Delete branch after merging
-git branch -d feature-branch
+### Example Compatible Files
+- YKN-CPP2-G-603_PM1.xlsx (Gas Turbine Maintenance)
+- ELECTRICAL-INSP-2024.xlsx (Electrical Inspection)
+- CALIBRATION-INST-Q3.xlsx (Instrument Calibration)
+
+---
+
+## 📊 Output Files Specification
+
+### 1. FORMHEAD.xlsx - Form Metadata
+```
+Columns: FORMNAME, TITLE, DESCRIPTION, CREATED_BY, CREATED_DATE, 
+         SOURCE_FILE, SOURCE_SHEET, PROCEDURES_COUNT, FILE_PREFIX, SHEET_PREFIX
+
+Example Row:
+ENG-B2C-FORM | Maintenance Form - ENGINE MAINTENANCE | Generated from YKN-CPP2-G-603_PM1.xlsx | 
+MK.ABDULLAH.DAFA | 2025-09-13 14:30:22 | YKN-CPP2-G-603_PM1.xlsx | ENGINE MAINTENANCE | 
+15 | YKN-A3F | ENG-B2C
 ```
 
-### 4.4 Handle Conflicts
-```bash
-# When pull fails due to conflicts
-git pull origin main
+### 2. FORMTEMPLATE.xlsx - Field Definitions (9 entries per procedure)
+```
+Columns: TEMPLATEID, TYPE, DESCRIPTION, LOVCODE
 
-# Edit conflicted files manually, then:
-git add .
-git commit -m "Resolve merge conflicts"
-git push origin main
+Example Entries for Procedure 1:
+ENG-B2C-P001-LBL | LABEL     | Inspect engine oil level and condition | 
+ENG-B2C-P001-LST | LIST      | Condition Found                        | ENG-B2C-GDLC
+ENG-B2C-P001-TXT | TEXTBOX   | Remarks                               |
+ENG-B2C-P001-CHK | CHECKBOX  | Completed                             |
+ENG-B2C-P001-ACT | LIST      | Corrective Action                     | ENG-B2C-NTCC
+ENG-B2C-P001-DAT | DATE      | Date Completed                        |
+ENG-B2C-P001-TIM | TIME      | Time Spent                            |
+ENG-B2C-P001-USR | USER      | Performed By                          |
+ENG-B2C-P001-SIG | SIGNATURE | Signature                             |
+```
+
+### 3. FORMLOV.xlsx - List of Values
+```
+Columns: LOVCODE, VALUE, DESCRIPTION, TYPE
+
+Example Entries:
+ENG-B2C-GDLC | Good         | Condition: Good         | CONDITION
+ENG-B2C-GDLC | Dirty        | Condition: Dirty        | CONDITION
+ENG-B2C-GDLC | Low          | Condition: Low          | CONDITION
+ENG-B2C-GDLC | Contaminated | Condition: Contaminated | CONDITION
+ENG-B2C-NTCC | No Action    | Action: No Action       | ACTION
+ENG-B2C-NTCC | Top Up       | Action: Top Up          | ACTION
+ENG-B2C-NTCC | Change Oil   | Action: Change Oil      | ACTION
+ENG-B2C-NTCC | Clean System | Action: Clean System    | ACTION
+```
+
+### 4. FORMMENU.xlsx - Menu Structure
+```
+Columns: MENUID, MENUTEXT, PARENT, ORDER, TYPE, FORM_NAME
+
+Example Entry:
+ENG-B2C-MAIN | Maintenance - ENGINE MAINTENANCE | ROOT | 1 | SECTION | ENG-B2C-FORM
 ```
 
 ---
 
-## Step 5: Troubleshooting Common Issues
+## 🛠 Troubleshooting Guide
 
-### 5.1 Authentication Issues (Enterprise Network)
-```bash
-# If using SSH keys
-git remote set-url origin git@github.com:hasandafa/your_project_name.git
+### Common Issues and Solutions
 
-# If using HTTPS with token
-git remote set-url origin https://username:token@github.com/hasandafa/your_project_name.git
-```
+#### Issue: "No procedures detected"
+**Cause**: Excel format not recognized or procedures too short
+**Solutions**:
+1. Check that procedures are numbered (1., 2., etc.)
+2. Ensure procedure text is at least 10 characters long
+3. Use "View Raw Data" to examine structure
+4. Try manual format override in Manual Override tab
 
-### 5.2 Sync Issues Between Devices
-```bash
-# Force pull (be careful, this overwrites local changes)
-git fetch origin
-git reset --hard origin/main
+#### Issue: "AttributeError: 'ExcelFormatHandler' object has no attribute..."
+**Cause**: Code version mismatch or missing methods
+**Solution**: Ensure you're using the complete v3.0 code with all methods implemented
 
-# Create backup before force pull
-git stash
-git pull origin main
-git stash pop
-```
+#### Issue: LOV codes not generating
+**Cause**: Empty values or special characters in input
+**Solutions**:
+1. Ensure condition/action values are comma-separated
+2. Avoid special characters in values
+3. Check that values are not empty
 
-### 5.3 Check Repository Status
-```bash
-# Detailed status information
-git status -v
+#### Issue: Generated files have duplicate identifiers
+**Cause**: Unique identifier system not working
+**Solution**: Delete `unique_identifiers.json` file and restart application
 
-# Check differences
-git diff
+#### Issue: Excel file won't load
+**Cause**: Corrupted file or unsupported format
+**Solutions**:
+1. Verify file is .xlsx or .xls format
+2. Try opening file in Excel first to check for corruption
+3. Ensure file is not password protected
+4. Check file permissions
 
-# Check differences of staged files
-git diff --staged
+### Performance Optimization
 
-# Check remote repository info
-git remote show origin
-```
+**For Large Files (>1000 procedures):**
+1. Close other applications to free memory
+2. Use "Auto-Configure Common LOVs" instead of manual configuration
+3. Consider splitting large files into smaller sheets
+4. Generate files one at a time if memory issues occur
 
----
-
-## Step 6: Best Practices
-
-### 6.1 Commit Message Guidelines
-- Use present tense: "Add feature" not "Added feature"
-- Keep first line under 50 characters
-- Use descriptive messages
-- Examples:
-  - `Add user authentication system`
-  - `Fix database connection timeout`
-  - `Update API documentation`
-  - `Refactor code structure`
-
-### 6.2 File Management
-```bash
-# Create .gitignore file to exclude unnecessary files
-echo "__pycache__/" >> .gitignore
-echo "*.pyc" >> .gitignore
-echo ".env" >> .gitignore
-echo "node_modules/" >> .gitignore
-
-# Add .gitignore to repository
-git add .gitignore
-git commit -m "Add .gitignore file"
-```
-
-### 6.3 Regular Workflow Checklist
-1. ✅ `git pull origin main` (before starting work)
-2. ✅ Make your changes
-3. ✅ `git add .` (stage changes)
-4. ✅ `git commit -m "descriptive message"` (commit changes)
-5. ✅ `git push origin main` (push to GitHub)
+**Network/Enterprise Environments:**
+1. Ensure write permissions to output directory
+2. Check antivirus software isn't blocking file operations
+3. Consider running as administrator if file access issues persist
 
 ---
 
-## Quick Reference Commands
+## 🔍 Advanced Features
 
+### Unique Identifier System
+- Automatic generation of file and sheet prefixes
+- Collision detection and resolution
+- Persistent tracking in `unique_identifiers.json`
+- Guaranteed uniqueness across all generated forms
+
+### Smart LOV Code Generation
+```
+Input: "Good,Damaged,Missing" 
+Output: "SHEET_PREFIX-GDM"
+
+Input: "Good,Damaged,Missing" (duplicate)
+Output: "SHEET_PREFIX-GDM1" (auto-incremented)
+```
+
+### Configuration Persistence
+- Save current configuration to JSON file
+- Load previous configurations
+- Session state preservation
+- User preference storage
+
+### Batch Processing Capabilities
+- Process multiple Excel files sequentially
+- Consistent LOV assignment across files
+- Bulk configuration options
+- Progress tracking and error handling
+
+---
+
+## 📝 Best Practices
+
+### File Naming Conventions
+```
+Input Files:  FACILITY-EQUIPMENT-TYPE-SEQUENCE.xlsx
+Example:      YKN-CPP2-G-603_PM1.xlsx
+
+Output Files: FORMTYPE_PREFIX_YYYYMMDD_HHMMSS.xlsx
+Example:      FORMHEAD_ENG-B2C_20250913_143022.xlsx
+```
+
+### LOV Configuration Guidelines
+1. **Keep values concise**: Use short, clear descriptive terms
+2. **Be consistent**: Use similar value sets for similar procedures
+3. **Cover all scenarios**: Include "No Action" for actions, "Good" for conditions
+4. **Avoid duplicates**: Each value should represent a distinct state or action
+
+### Quality Assurance Checklist
+- [ ] All procedures have configured LOVs
+- [ ] Generated LOV codes are unique
+- [ ] Preview shows correct procedure count
+- [ ] Output directory has write permissions
+- [ ] User name is correctly configured
+
+---
+
+## 🤝 Git Workflow Integration
+
+This project follows professional Git workflow practices for multi-device development:
+
+### Repository Management
 ```bash
-# Essential daily commands
+# Daily workflow
 git pull origin main           # Get latest changes
-git add .                      # Stage all changes
-git commit -m "message"        # Commit changes
+git add .                      # Stage changes
+git commit -m "descriptive message"  # Commit changes
 git push origin main           # Push to GitHub
-git status                     # Check current status
-git log --oneline             # View commit history
 
-# Setup commands (one-time)
-git init                      # Initialize repository
-git remote add origin URL     # Add remote repository
-git branch -m master main     # Rename branch to main
-git push -u origin main       # First push with upstream
+# Branch management for features
+git checkout -b feature-new-parser
+git commit -m "Add support for new format"
+git checkout main
+git merge feature-new-parser
+```
 
-# Troubleshooting
-git stash                     # Temporarily save changes
-git stash pop                 # Restore stashed changes
-git reset --hard origin/main  # Reset to remote version
+### Project Structure
+```
+pm_form_generator/
+├── formgenerator.py           # Main application
+├── requirements.txt           # Python dependencies  
+├── README.md                  # This documentation
+├── ui.html                    # Visual workflow guide
+├── build.bat                  # Build script for executable
+├── unique_identifiers.json   # Unique ID tracking (auto-generated)
+└── format_learning_db.json   # Learning system data (auto-generated)
 ```
 
 ---
 
----
+## 📞 Support and Contributing
 
-## PM Form Generator Application
+### Getting Help
+1. **Check this README** for common issues and solutions
+2. **Review the troubleshooting section** for specific error messages
+3. **Use "View Raw Data"** feature to diagnose format detection issues
+4. **Check GitHub Issues** for known problems and solutions
 
-This repository also contains a Python application for converting Excel-based maintenance tasklists into structured database forms.
+### Contributing
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature-amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature-amazing-feature`)
+5. Open a Pull Request
 
-### 🚀 Features
-- **Excel File Processing**: Load and analyze maintenance tasklist sheets
-- **Smart Detection**: Automatically identify procedures and sections
-- **Interactive Configuration**: User-friendly dialog for LOV assignment
-- **Multiple Output Formats**: Generate FORMHEAD, FORMMENU, FORMTEMPLATE, and FORMLOV files
-- **Built-in LOV Database**: Pre-loaded with common maintenance codes
-- **Batch Operations**: Configure similar procedures efficiently
-
-### 📋 Requirements
-- Python 3.8 or higher
-- pandas >= 1.5.0
-- openpyxl >= 3.1.0
-- tkinter (included with Python)
-
-### 🔧 Installation & Usage
-
-#### Method 1: Run from Source
-```bash
-# Install dependencies
-pip install -r requirements.txt
-
-# Run the application
-python formgenerator.py
-```
-
-#### Method 2: Build Executable
-```bash
-# Run the build script
-build.bat
-
-# Run the executable
-dist\PM_Form_Generator.exe
-```
-
-### 📖 How to Use
-1. **Select Excel File**: Choose your maintenance tasklist Excel file
-2. **Pick Sheet**: Select the specific tasklist sheet to process
-3. **Enter Username**: Provide username for form metadata
-4. **Analyze Structure**: Let the app detect procedures and sections
-5. **Configure LOVs**: Assign condition and action codes to each procedure
-6. **Generate Forms**: Create the 4 required Excel output files
-
-### 📁 Input File Format
-- Excel file with tasklist sheets
-- Procedures should be numbered (1., 2., 3., etc.)
-- Sections can be named (ENGINE, GENERATOR, etc.)
-- Standard maintenance form structure expected
-
-### 📊 Output Files
-- **FORMHEAD.xlsx** - Form metadata and configuration
-- **FORMMENU.xlsx** - Menu structure and navigation
-- **FORMTEMPLATE.xlsx** - Form fields and layout definitions
-- **FORMLOV.xlsx** - List of values for dropdowns and checkboxes
+### Version History
+- **v3.0**: Complete redesign with simplified workflow and enhanced reliability
+- **v2.4**: Multi-tab interface with advanced detection
+- **v2.0**: Basic Excel processing with manual LOV configuration
+- **v1.0**: Initial release with simple form generation
 
 ---
 
-## Project Files
+## 📄 License
 
-- `formgenerator.py` - Main Python application for form generation
-- `requirements.txt` - Python dependencies
-- `build.bat` - Build script for creating executable
-- `ui.html` - Visual workflow canvas (open in browser)
-- `README.md` - This comprehensive documentation
+This project is provided as-is for educational and practical purposes. Feel free to modify and distribute according to your needs.
 
----
-
-## Git Workflow Integration
-
-This project demonstrates the complete development workflow:
-1. **Repository Setup** - Following the Git workflow guide above
-2. **Development** - Using version control for code and documentation
-3. **Documentation** - Maintaining README and visual guides
-4. **Distribution** - Building executables and managing releases
-
----
-
-## Contributing
-
-This project combines Git workflow best practices with practical application development. Feel free to fork and adapt for your own maintenance form generation needs.
-
-## License
-
-This project is provided as-is for educational and practical purposes.
+**Developed with ❤️ by MK.ABDULLAH.DAFA**
 
 ---
 
